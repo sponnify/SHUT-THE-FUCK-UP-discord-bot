@@ -17,6 +17,9 @@ module.exports = {
             }
 
             let channel = interaction.options.getChannel('target');
+            if (!channel) {
+                return await interaction.reply('Invalid channel specified.');
+            }
 
             interaction.client.ignoredChannels[channel.id] = true;
 

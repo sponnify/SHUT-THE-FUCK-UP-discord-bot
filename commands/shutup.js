@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const logger = require('./logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,14 +26,23 @@ module.exports = {
             .setRequired(true)
         ),
     async execute(interaction) {
-        let userId = interaction.options.getUser('target').id;
-        let tokensPerHour = interaction.options.getInteger('tokensperhour');
-        let messageCost = interaction.options.getInteger('messagecost');
-        let linkCost = interaction.options.getInteger('linkcost');
+        try {
+            if (!interaction.member.permissions.has('ADMINISTRATOR')) {
+                return await interaction.reply('You do not have permission to use this command.');
+            }
 
-        interaction.client.userParameters[userId] = { tokensPerHour, messageCost, linkCost };
-        interaction.client.userTokens[userId] = tokensPerHour;
+            let userId = interaction.options.getUser('target').id;
+            let tokensPerHour = interaction.options.getInteger('tokensperhour');
+            let messageCost = interaction.options.getInteger('messagecost');
+            let linkCost = interaction.options.getInteger('linkcost');
 
-        await interaction.reply(`Set parameters for ${userId}: ${tokensPerHour} tokens per hour, ${messageCost} tokens per message, ${linkCost} tokens per link.`);
+            interaction.client.userParameters[userId] = { tokensPerHour, messageCost, linkCost };
+            interaction.client.userTokens[userId] = tokensPerHour;
+
+            await interaction.reply(`Set parameters for ${userId}: ${tokensPerHour} tokens per hour, ${messageCost} tokens per message, ${linkCost} tokens per link.`);
+        } catch (error) {
+            logger.error(`Error executing 'shutup' command: ${error}`);
+            await interaction.reply('There was an error executing the command.');
+        }
     },
 };

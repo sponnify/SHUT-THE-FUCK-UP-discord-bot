@@ -12,6 +12,10 @@ module.exports = {
         ),
     async execute(interaction) {
         try {
+            if (!interaction.member.permissions.has('ADMINISTRATOR')) {
+                return await interaction.reply('You do not have permission to use this command.');
+            }
+
             let user = interaction.options.getUser('target');
             let userId = user.id;
 

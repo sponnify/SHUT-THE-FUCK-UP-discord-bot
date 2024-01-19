@@ -19,7 +19,8 @@ module.exports = {
                 const embed = new EmbedBuilder()
                     .setColor('#0099ff')
                     .setTitle('Commands')
-                    .setDescription(commands.map(command => command.data.name).join(', '));
+                    .setDescription(commands.map(command => command.data.name).join(', '))
+                    .addField('About the Bot', 'This bot is designed to monitor user activity and manage user interactions in a Discord server. It uses a token system to track user messages and provides several commands for admins and users.');
                 return await interaction.reply({ embeds: [embed] });
             }
 
