@@ -15,7 +15,7 @@ module.exports = async (client, message) => {
         let tokenCost = urlRegex.test(message.content) || message.embeds.length > 0 ? client.userParameters[userId].linkCost : client.userParameters[userId].messageCost;
         client.userTokens[userId] -= tokenCost;
 
-        // Check if the bot was mentioned in the message
+        // Check if the bot was mentioned in the message (as a means to check if the bot is able to read messages)
         if (message.mentions.has(client.user)) {
             console.log(`Bot was mentioned by ${message.author.username}`);
             message.reply('SHUT UP!!!!!!!!');
