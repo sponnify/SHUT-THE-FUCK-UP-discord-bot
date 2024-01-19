@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const logger = require('./logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,18 +11,25 @@ module.exports = {
             .setRequired(true)
         ),
     async execute(interaction) {
-        if (!interaction.member.permissions.has('ADMINISTRATOR')) {
-            return await interaction.reply('You do not have permission to use this command.');
+        try {
+            if (!interaction.member.permissions.has('ADMINISTRATOR')) {
+                return await interaction.reply('You do not have permission to use this command.');
+            }
+
+            let channel = interaction.options.getChannel('target');
+
+            if (!interaction.client.ignoredChannels[channel.id]) {
+                return await interaction.reply(`Channel ${channel.name} is not currently being ignored.`);
+            }
+
+            delete interaction.client.ignoredChannels[channel.id];
+
+            await interaction.reply(`Channel ${channel.name} will no longer be ignored by the bot.`);
+            logger.info(`'unignorechannel' command executed by ${interaction.user.tag}, channel unignored: ${channel.name}`);
+        } catch (error) {
+            logger.error(`Error executing 'unignorechannel' command: ${error}`);
+            await interaction.reply('There was an error executing the command.');
         }
-
-        let channel = interaction.options.getChannel('target');
-
-        if (!interaction.client.ignoredChannels[channel.id]) {
-            return await interaction.reply(`Channel ${channel.name} is not currently being ignored.`);
-        }
-
-        delete interaction.client.ignoredChannels[channel.id];
-
-        await interaction.reply(`Channel ${channel.name} will no longer be ignored by the bot.`);
     },
+    cooldown: 5, // Cooldown in seconds
 };

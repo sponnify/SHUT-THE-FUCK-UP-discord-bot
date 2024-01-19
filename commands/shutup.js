@@ -40,9 +40,11 @@ module.exports = {
             interaction.client.userTokens[userId] = tokensPerHour;
 
             await interaction.reply(`Set parameters for ${userId}: ${tokensPerHour} tokens per hour, ${messageCost} tokens per message, ${linkCost} tokens per link.`);
+            logger.info(`'shutup' command executed by ${interaction.user.tag}, parameters set for user: ${userId}`);
         } catch (error) {
             logger.error(`Error executing 'shutup' command: ${error}`);
             await interaction.reply('There was an error executing the command.');
         }
     },
+    cooldown: 5, // Cooldown in seconds
 };

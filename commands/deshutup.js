@@ -32,9 +32,11 @@ module.exports = {
             } catch (error) {
                 logger.error(`Error sending DM to user: ${error}`);
             }
+            logger.info(`'deshutup' command executed by ${interaction.user.tag}, target user: ${user.username}`);
         } catch (error) {
             logger.error(`Error executing 'deshutup' command: ${error}`);
             await interaction.reply('There was an error executing the command.');
         }
     },
+    cooldown: 5, // Cooldown in seconds
 };

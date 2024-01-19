@@ -24,9 +24,11 @@ module.exports = {
             interaction.client.ignoredChannels[channel.id] = true;
 
             await interaction.reply(`Channel ${channel.name} will be ignored by the bot.`);
+            logger.info(`'ignorechannel' command executed by ${interaction.user.tag}, channel ignored: ${channel.name}`);
         } catch (error) {
             logger.error(`Error executing 'ignorechannel' command: ${error}`);
             await interaction.reply('There was an error executing the command.');
         }
     },
+    cooldown: 5, // Cooldown in seconds
 };
